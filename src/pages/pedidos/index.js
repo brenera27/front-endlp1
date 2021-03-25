@@ -119,15 +119,9 @@ export default function Produtos(props) {
             pedidoStatus.comCod = aux.comCod
             pedidoStatus.proCod = aux.proCod
             pedidoStatus.pedMemObs = aux.pedMemObs
-            //setPedidoStatus(resultado.data)
         }).catch(error => {
             console.log(error)
         })
-        // for (var i = 0; i < pedidos.length; i++) {
-        //     if (pedidos[i].pedCod == pedCod) {
-        //          return pedidos[i]
-        //     }
-        // }
     }
 
     async function finalizar(pedCod) {

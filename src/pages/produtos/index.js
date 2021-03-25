@@ -80,12 +80,14 @@ export default function Produtos(props) {
     }
 
     async function apagarPedido(proCod){
-        await API.delete(`/pedido/${proCod}`).then( (resultado) => {
+        await API.delete(`/produtos/${proCod}`).then( (resultado) => {
             console.log(resultado)
+            Alert.success('Apagado com sucesso!')
         }).catch(error => {
             console.log(error)
         })
-        Alert.success('Apagado com sucesso.')
+       
+        loadProducts()
     }
     return (
         <FlexboxGrid justify="center">
