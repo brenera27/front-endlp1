@@ -19,26 +19,47 @@ export default function Produtos(props) {
     const [loading, setLoading] = useState(false)
     const [showAdiciona, setShowAdiciona] = useState(false)
 
-    const ActionCell = ({ value, rowData, dataKey, ...props }) => {
-        return (
-            <Cell {...props} className="link-group">
-                <Icon icon={props.icon} size="lg" style={{ cursor: 'pointer' }} onClick={() => { props.funcao(rowData[dataKey]) }} />
-            </Cell>
-        )
-    }
+    // const ActionCell = ({ value, rowData, dataKey, ...props }) => {
+    //     return (
+    //         <Cell {...props} className="link-group">
+    //             <Icon icon={props.icon} size="lg" style={{ cursor: 'pointer' }} onClick={() => { props.funcao(rowData[dataKey]) }} />
+    //         </Cell>
+    //     )
+    // }
 
     useEffect(() => {
         loadProducts()
     }, [])
 
+    //abrir e fechar modal de cadastrar produto
     function closeAdiciona() {
         setShowAdiciona(false)
 
     }
+
     function openAdiciona() {
         setShowAdiciona(true)
 
     }
+    //funções de paginação
+    function handleChangePage(dataKey) {
+        setPage(dataKey)
+    }
+
+    function handleChangeLength(dataKey) {
+        setPage(1)
+        displayLength = dataKey
+    }
+
+    function getData() {
+        return produtos.filter((v, i) => {
+            const start = displayLength * (page - 1)
+            const end = start + displayLength
+            return i >= start && i < end
+        })
+    }
+
+    //busca produtos do back-end
     async function loadProducts() {
         setLoading(true)
         await API.get("/produtos/list").then(resultado => {
@@ -50,20 +71,7 @@ export default function Produtos(props) {
         setLoading(false)
     }
 
-    function handleChangePage(dataKey) {
-        setPage(dataKey)
-    }
-    function handleChangeLength(dataKey) {
-        setPage(1)
-        displayLength = dataKey
-    }
-    function getData() {
-        return produtos.filter((v, i) => {
-            const start = displayLength * (page - 1)
-            const end = start + displayLength
-            return i >= start && i < end
-        })
-    }
+    //função de cadastrar produtos
     async function cadastra() {
         closeAdiciona()
         if (novoProd.proDesNome != "" && novoProd.proIngrediente != "" && novoProd.proValor != "") {
@@ -79,16 +87,16 @@ export default function Produtos(props) {
         }
     }
 
-    async function apagarPedido(proCod) {
-        await API.delete(`/produtos/${proCod}`).then((resultado) => {
-            console.log(resultado)
-            Alert.success('Apagado com sucesso!')
-        }).catch(error => {
-            console.log(error)
-        })
+    // async function apagarPedido(proCod) {
+    //     await API.delete(`/produtos/${proCod}`).then((resultado) => {
+    //         console.log(resultado)
+    //         Alert.success('Apagado com sucesso!')
+    //     }).catch(error => {
+    //         console.log(error)
+    //     })
 
-        loadProducts()
-    }
+    //     loadProducts()
+    // }
     return (
         <FlexboxGrid justify="center">
             <div id="home">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import "./styles.css"
-import { Button, Modal, Icon, Grid, Table, Alert, IconButton, ControlLabel, FlexboxGrid, InputPicker, FormGroup, Loader, Col, FormControl, Form } from 'rsuite';
+import { Button, Modal, Icon, Grid, Table, Alert, IconButton, ControlLabel, FlexboxGrid, FormGroup, Loader, FormControl, Form } from 'rsuite';
 import API from '../api'
 const { Column, HeaderCell, Cell, Pagination } = Table;
 
@@ -33,14 +33,18 @@ export default function Produtos(props) {
         loadProducts()
     }, [])
 
+    // abrir e fechar modal de cadastrar pedido 
     function closeAdiciona() {
         setShowAdiciona(false)
 
     }
+
     function openAdiciona() {
         setShowAdiciona(true)
 
     }
+
+    // abrir e fechar modal de informações do pedido
     function closeInfo() {
         setShowInfo(false)
         setProdutos({
@@ -51,9 +55,29 @@ export default function Produtos(props) {
         })
 
     }
+
     function openInfo() {
         setShowInfo(true)
     }
+
+    // funções da paginação
+    function handleChangePage(dataKey) {
+        setPage(dataKey)
+    }
+
+    function handleChangeLength(dataKey) {
+        setPage(1)
+        displayLength = dataKey
+    }
+
+    function getData() {
+        return pedidos.filter((v, i) => {
+            const start = displayLength * (page - 1)
+            const end = start + displayLength
+            return i >= start && i < end
+        })
+    }
+    // busca os produtos do back-end
     async function loadProducts() {
         setLoading(true)
         //const aux = [{ "id": 1, "produtos": "teste", "mesa": 3, "status": 1 }, { "id": 1, "produtos": "teste", "mesa": 2, "status": 1 }, { "id": 1, "produtos": "teste", "mesa": 1, "status": 1 }]
@@ -66,21 +90,9 @@ export default function Produtos(props) {
         setLoading(false)
     }
 
-    function handleChangePage(dataKey) {
-        setPage(dataKey)
-    }
-    function handleChangeLength(dataKey) {
-        setPage(1)
-        displayLength = dataKey
-    }
-    function getData() {
-        return pedidos.filter((v, i) => {
-            const start = displayLength * (page - 1)
-            const end = start + displayLength
-            return i >= start && i < end
-        })
-    }
+    
 
+    //cadastrar pedido
     async function cadastra() {
         closeAdiciona()
         if (newPedido.proCod != "") {
@@ -98,6 +110,10 @@ export default function Produtos(props) {
 
     }
 
+    function limpaCampos() {
+        setNewPedido({ "comCod": "", "proCod": "", "pedMemObs": "" })
+    }
+
     async function buscaProduto(proCod) {
         openInfo()
         setLoading(true)
@@ -109,12 +125,10 @@ export default function Produtos(props) {
         setLoading(false)
     }
 
-    function limpaCampos() {
-        setNewPedido({ "comCod": "", "proCod": "", "pedMemObs": "" })
-    }
+
 
     async function buscaPedido(pedCod) {
-        await API.get(`/pedidos/${pedCod}`).then( (resultado) => {
+        await API.get(`/pedidos/${pedCod}`).then((resultado) => {
             const aux = resultado.data
             pedidoStatus.comCod = aux.comCod
             pedidoStatus.proCod = aux.proCod
@@ -124,6 +138,7 @@ export default function Produtos(props) {
         })
     }
 
+    // funções de alterar o status do pedido 
     async function finalizar(pedCod) {
         buscaPedido(pedCod)
         await API.put(`/pedidos/${pedCod}/finalizar`, { "comCod": pedidoStatus.comCod, "proCod": pedidoStatus.proCod, "pedMemObs": pedidoStatus.pedMemObs }).then(resultado => {
@@ -137,12 +152,12 @@ export default function Produtos(props) {
     async function cancelar(pedCod) {
         await buscaPedido(pedCod)
         console.log(pedidoStatus)
-         await API.put(`/pedidos/${pedCod}/cancelar`, { "comCod": pedidoStatus.comCod, "proCod": pedidoStatus.proCod,  "pedMemObs":pedidoStatus.pedMemObs}).then(resultado => {
+        await API.put(`/pedidos/${pedCod}/cancelar`, { "comCod": pedidoStatus.comCod, "proCod": pedidoStatus.proCod, "pedMemObs": pedidoStatus.pedMemObs }).then(resultado => {
             console.log(resultado)
         }).catch(error => {
             console.log(error)
         })
-        loadProducts() 
+        loadProducts()
     }
 
     return (
@@ -154,7 +169,7 @@ export default function Produtos(props) {
                     </center>
                     <hr className="my-4"></hr>
                     <Grid fluid>
-                        <Table autoHeight AutoComplete data={data} loading={loading} className='tabela-produtos' appearance="primary" hover={false}  rowClassName={pedidos.pedStatus = "CANCELADO" ? "cancelado" : "ativo"}>
+                        <Table autoHeight AutoComplete data={data} loading={loading} className='tabela-produtos' appearance="primary" hover={false} rowClassName={pedidos.pedStatus = "CANCELADO" ? "cancelado" : "ativo"}>
                             <Column width={50} fixed>
                                 <HeaderCell>Info</HeaderCell>
                                 <ActionCell dataKey={'proCod'} icon={'info'} funcao={buscaProduto} />
@@ -178,7 +193,7 @@ export default function Produtos(props) {
                             </Column>
                             <Column width={100} fixed>
                                 <HeaderCell>Valor em R$</HeaderCell>
-                                <Cell dataKey="pedVlrTotal"/>
+                                <Cell dataKey="pedVlrTotal" />
                             </Column>
                             <Column width={70} fixed>
                                 <HeaderCell>Cancelar</HeaderCell>
