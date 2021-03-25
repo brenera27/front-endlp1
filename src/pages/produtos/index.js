@@ -79,14 +79,14 @@ export default function Produtos(props) {
         }
     }
 
-    async function apagarPedido(proCod){
-        await API.delete(`/produtos/${proCod}`).then( (resultado) => {
+    async function apagarPedido(proCod) {
+        await API.delete(`/produtos/${proCod}`).then((resultado) => {
             console.log(resultado)
             Alert.success('Apagado com sucesso!')
         }).catch(error => {
             console.log(error)
         })
-       
+
         loadProducts()
     }
     return (
@@ -98,7 +98,7 @@ export default function Produtos(props) {
                     </center>
                     <hr className="my-4"></hr>
                     <Grid fluid>
-                        <Table autoHeight AutoComplete data={data} loading={loading} className='tabela-produtos' appearance="primary"hover={false}>
+                        <Table autoHeight AutoComplete data={data} loading={loading} className='tabela-produtos' appearance="primary" hover={false}>
                             <Column width={100} align="center" fixed>
                                 <HeaderCell>Id Produto</HeaderCell>
                                 <Cell dataKey="proCod" />
@@ -118,10 +118,13 @@ export default function Produtos(props) {
                                 <HeaderCell>Valor em R$</HeaderCell>
                                 <Cell dataKey="proValor" />
                             </Column>
-                            <Column width={70} fixed>
-                                <HeaderCell>Apagar</HeaderCell>
-                                <ActionCell dataKey={'proCod'} icon={'trash'} funcao={apagarPedido}/>
-                            </Column>
+                            {
+                                //  <Column width={70} fixed>
+                                //  <HeaderCell>Apagar</HeaderCell>
+                                //  <ActionCell dataKey={'proCod'} icon={'trash'} funcao={apagarPedido}/>
+                                // </Column>
+                            }
+
 
                         </Table>
                         <Pagination
