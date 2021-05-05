@@ -18,6 +18,7 @@ export default function App() {
             <Nav.Item onClick={() => history.replace('/home')} icon={<Icon icon="home" />} >Home</Nav.Item>
             <Nav.Item onClick={() => history.replace('/pedidos')} icon={<Icon icon="shopping-basket" />} >Pedidos</Nav.Item>
             <Nav.Item onClick={() => history.replace('/produtos')} icon={<Icon icon="cutlery" />} >Produtos</Nav.Item>
+            <Nav.Item onClick={() => history.replace('/dashboard')} icon={<Icon icon="bar-chart" />} >Dashboard</Nav.Item>
           </Nav>
         </Navbar.Body>
       </Navbar>
@@ -29,7 +30,7 @@ export default function App() {
   }
   return (
     <div>
-      <NavBarInstance onSelect={handleSelect} />
+      <NavBarInstance onSelect={handleSelect} appearance="inverse"/>
     </div>
   );
 

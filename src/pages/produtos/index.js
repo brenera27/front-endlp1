@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import "./styles.css"
-import { Button, Modal, Icon, Grid, Table, Alert, IconButton, ControlLabel, FlexboxGrid, InputPicker, FormGroup, Loader, Col, FormControl, Form } from 'rsuite';
+import { Button, Modal, Icon, Grid, Table, Alert, IconButton, ControlLabel, FlexboxGrid, Panel, FormGroup, Loader, Col, FormControl, Form } from 'rsuite';
 import API from '../api'
 const { Column, HeaderCell, Cell, Pagination } = Table;
 
@@ -79,7 +79,7 @@ export default function Produtos(props) {
             await API.post("/produtos/", { "proDesNome": novoProd.proDesNome, "proIngrediente": novoProd.proIngrediente, "proValor": novoProd.proValor }).then(resultado => {
                 console.log(resultado)
             }).catch(error => {
-                console.log(error)
+                Alert.error(error)
             })
             loadProducts()
         } else {
@@ -101,12 +101,9 @@ export default function Produtos(props) {
         <FlexboxGrid justify="center">
             <div id="home">
                 <div id="corpo-home">
-                    <center>
-                        <h1>Produtos</h1>
-                    </center>
-                    <hr className="my-4"></hr>
+                <Panel shaded bordered header={<h4>Produtos</h4>}>
                     <Grid fluid>
-                        <Table autoHeight AutoComplete data={data} loading={loading} className='tabela-produtos' appearance="primary" hover={false}>
+                        <Table autoHeight wordWrap AutoComplete data={data} loading={loading} className='tabela-produtos' appearance="primary" hover={false}>
                             <Column width={100} align="center" fixed>
                                 <HeaderCell>Id Produto</HeaderCell>
                                 <Cell dataKey="proCod" />
@@ -117,13 +114,13 @@ export default function Produtos(props) {
                                 <Cell dataKey="proDesNome" />
                             </Column>
 
-                            <Column width={200} fixed>
+                            <Column width={200} fixed >
                                 <HeaderCell>Ingredintes</HeaderCell>
                                 <Cell dataKey="proIngrediente" />
                             </Column>
 
                             <Column width={100} fixed>
-                                <HeaderCell>Valor em R$</HeaderCell>
+                                <HeaderCell>Valor (R$)</HeaderCell>
                                 <Cell dataKey="proValor" />
                             </Column>
                             {
@@ -143,7 +140,7 @@ export default function Produtos(props) {
                             onChangePage={handleChangePage}
                             onChangeLength={handleChangeLength}
                         />
-                        <IconButton appearance="primary" icon={<Icon className="fill-color" icon="plus" size="lg" />} size="xs" onClick={openAdiciona}>Adicionar</IconButton>
+                        <IconButton appearance="primary" icon={<Icon className="fill-color" icon="plus" size="lg" />} size="xs" onClick={openAdiciona}>Novo</IconButton>
                     </Grid>
                     <Modal show={showAdiciona} onHide={closeAdiciona} size="xs">
 
@@ -158,11 +155,11 @@ export default function Produtos(props) {
                                 </FormGroup>
                                 <FormGroup>
                                     <ControlLabel>Ingredientes</ControlLabel>
-                                    <FormControl name="proIngrediente" type="textarea" />
+                                    <FormControl name="proIngrediente" type="textarea" componentClass="textarea" rows={3}/>
                                 </FormGroup>
                                 <FormGroup>
                                     <ControlLabel>Valor</ControlLabel>
-                                    <FormControl name="proValor" type="number" />
+                                    <FormControl name="proValor" type="number"/>
                                 </FormGroup>
 
                             </Modal.Body>
@@ -172,6 +169,7 @@ export default function Produtos(props) {
                             </Modal.Footer>
                         </Form>
                     </Modal>
+                    </Panel>
                 </div>
             </div>
         </FlexboxGrid>
